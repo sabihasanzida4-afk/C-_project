@@ -1,0 +1,27 @@
+@{
+    ViewData["Title"] = "Confirm Email";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0"><i class="bi bi-envelope-check me-2"></i>Email Confirmation</h4>
+            </div>
+            <div class="card-body p-4 text-center">
+                <div class="mb-3">
+                    @if (ViewData["Message"]?.ToString()?.Contains("Thank you") == true)
+                    {
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-x-circle-fill text-danger" style="font-size: 3rem;"></i>
+                    }
+                </div>
+                <h5 class="mb-3">@ViewData["Message"]</h5>
+                <a asp-action="Login" class="btn btn-primary">Go to Login</a>
+            </div>
+        </div>
+    </div>
+</div>

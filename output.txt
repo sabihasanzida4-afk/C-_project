@@ -1,0 +1,178 @@
+Founded 1991 by Md. Alimullah Miyan
+IUBAT School of Computer Science and Engineering
+Department of Computer Science and Engineering
+Assignment of Summer Semester 2026
+Program: Bachelor of Computer Science and Engineering (BCSE)
+Course Instructor: Md. Asif Hossain
+Course Code: CSC 439
+Course Title: Visual Programming Full Marks: 100
+Section: C & D Submission Date: 05 – 09 – 2026
+CO 1 2 3 PO a b
+CO3 - PO2 - C4 – 100 Marks
+Scenario
+A university currently receives student requests for services such as ID card replacement, transcript
+requests, and certificate requests through manual forms and email. This makes it difficult for students to
+track their requests and for university staff to manage them efficiently.
+The university wants a simple Student Service Request System developed using ASP.NET MVC.
+The system should allow students to submit a service request and check its status. A staff member should
+be able to view submitted requests and update their status.
+However, the university has two important concerns:
+• The system should be simple and easy to use for students.
+• Only authorized staff should be able to access and modify student requests.
+You are required to analyze the problem, propose a suitable solution, and develop a functional
+ASP.NET MVC application.
+Tasks
+Part A — Problem Analysis
+Analyze the given problem and:
+1. Identify the main users/stakeholders of the system.
+2. Identify the major functional requirements of the system.
+3. Identify the major non-functional requirements.
+4. Identify the conflict between ease of use and access control/security.
+5. Explain how this conflict should influence your system design.
+Page-1 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+Part B — System Design
+Based on your analysis, design the proposed solution.
+Your design should include:
+• The main Models required.
+• The main Controllers required.
+• The main Views required.
+• A simple database structure.
+• A basic diagram showing how the User → View → Controller → Model/Database components
+interact.
+You should briefly justify why your proposed structure is appropriate for the problem.
+Part C — ASP.NET MVC Implementation
+Develop a functional prototype with the following minimum features:
+Student
+A student should be able to:
+• Register/login to the system.
+• Submit a service request.
+• Select a request type, such as:
+o ID Card Replacement
+o Transcript Request
+o Certificate Request
+• Provide a short description of the request.
+• View their submitted requests.
+• View the status of each request.
+Staff
+A staff user should be able to:
+• Login to the system.
+• View submitted service requests.
+• View the details of a request.
+• Change the request status to:
+o Pending
+o Processing
+o Completed
+o Rejected
+Page-2 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+Requirements
+The application must demonstrate appropriate use of:
+• ASP.NET MVC
+• Models and ViewModels where appropriate
+• Controllers and Actions
+• Razor Views
+• Routing
+• HTML Forms
+• Server-side validation
+• Database connectivity
+• CRUD operations
+• Appropriate navigation between pages
+• Basic role-based access or authorization for student and staff functions
+Students may use Entity Framework or another database-access approach taught in the course.
+Deliverables
+Students must submit:
+1. ASP.NET MVC project/source code
+2. Database/database backup
+3. Short report with KPA Form Attachment
+4. Short demonstration of the application
+Page-3 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+Assignment Report Format
+1. Introduction
+Briefly describe:
+• Background of the problem
+• Problem statement
+• Objectives of the proposed system
+Recommended length: 1 page
+2. Problem Analysis
+2.1 Stakeholders and Requirements
+Identify the major stakeholders and their key functional and non-functional requirements.
+2.2 Conflicting Requirements
+Identify two conflicting requirements and explain how they influence the system design.
+Examples:
+• Usability vs. Security
+• Simplicity vs. Functionality
+Recommended length: 1 page
+Page-4 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+3. System Design
+3.1 Proposed Solution
+Briefly explain how the proposed ASP.NET MVC system addresses the identified problem.
+3.2 MVC Design
+Identify the major:
+• Models
+• Controllers
+• Views
+Include a simple MVC interaction diagram.
+3.3 Database Design
+Provide the main database tables and their relationships.
+Recommended length: 2 pages
+4. Implementation
+Briefly describe the implementation using ASP.NET MVC.
+Discuss:
+• ASP.NET MVC features used
+• Database connectivity
+• CRUD operations
+• Form validation
+• Student/staff access control
+Include screenshots of the major system interfaces.
+Recommended length: 2–3 pages
+Page-5 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+6. Conclusion
+Briefly summarize:
+• The problem addressed
+• The developed solution
+• Major ASP.NET concepts applied
+• Key design decisions and findings
+Recommended length: 1 page
+References
+List the main books, documentation, websites, or other resources used.
+KPA Form
+Page-6 of 7
+
+Founded 1991 by Md. Alimullah Miyan
+Expected KPA to be Covered:
+• K3: A systematic, theory-based formulation of engineering fundamentals required in the
+engineering discipline.
+• K4: Engineering specialist knowledge that provides theoretical frameworks and bodies of
+knowledge for the accepted practice areas in the engineering discipline; much is at the forefront of
+the discipline.
+• P1 Depth of knowledge required: Cannot be resolved without in-depth engineering knowledge at
+the level of one or more of K3, K4, K5, K6 or K8 which allows a fundamentals-based, first principles
+analytical approach
+• P2 Range of conflicting requirements: Involve wide-ranging or conflicting technical, engineering
+and other issues
+• P3 Depth of analysis required: Have no obvious solution and require abstract thinking, originality
+in analysis to formulate suitable models
+Bloom’s Taxonomy Levels in Cognitive Domain:
+C1: Remember; C2: Understand; C3: Apply; C4: Analyze; C5: Evaluate; C6: Create
+Course Outcomes:
+CO1: Explain specific design patterns and different features of visual programming language.
+CO2: Apply design patterns and visual programming language features to solve a problem.
+CO3: Analyze the use of visual programming features to develop a solution to a real-life problem.
+Program Outcomes:
+PO1: Apply knowledge of mathematics, natural science, computing, engineering fundamentals and
+an engineering specialization as specified in WK1 to WK4 respectively to develop solutions of
+complex engineering problems.
+PO2: Identify, formulate, research literature and analyze complex engineering problems reaching
+substantiated conclusions using first principles of mathematics, natural sciences and engineering
+sciences with holistic considerations for sustainable development (WK1 to WK4).
+Page-7 of 7
+
