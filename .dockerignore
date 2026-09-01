@@ -10,7 +10,6 @@
 **/docker-compose*.yml
 **/.dockerignore
 **/README.md
-**/appsettings.Production.json
 **/appsettings.Development.json
 **/*.user
 **/*.suo

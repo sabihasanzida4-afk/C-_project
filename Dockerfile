@@ -16,4 +16,6 @@ RUN dotnet publish -c Release -o /app/publish --no-restore
 FROM base AS final
 WORKDIR /app
 COPY --from=build /app/publish .
-ENTRYPOINT ["sh", "-c", "dotnet ef database update --project /app/StudentServiceRequest.Web.dll 2>&1 || true; dotnet StudentServiceRequest.Web.dll"]
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+ENTRYPOINT ["sh", "-c", "dotnet ef database update 2>&1; dotnet StudentServiceRequest.Web.dll"]
