@@ -1,9 +1,3 @@
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-WORKDIR /app
-EXPOSE 8080
-ENV ASPNETCORE_URLS=http://+:8080
-ENV ASPNETCORE_ENVIRONMENT=Production
-
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY StudentServiceRequest.sln .
@@ -13,9 +7,13 @@ COPY . .
 WORKDIR /src/src/StudentServiceRequest.Web
 RUN dotnet publish -c Release -o /app/publish --no-restore
 
-FROM base AS final
+# Run migrations in build stage (has SDK)
+RUN dotnet ef database update --project /src/src/StudentServiceRequest.Web/StudentServiceRequest.Web.csproj --no-build 2>&1 || true
+
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
+EXPOSE 8080
+ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_ENVIRONMENT=Production
 COPY --from=build /app/publish .
-RUN dotnet tool install --global dotnet-ef
-ENV PATH="$PATH:/root/.dotnet/tools"
-ENTRYPOINT ["sh", "-c", "dotnet ef database update 2>&1; dotnet StudentServiceRequest.Web.dll"]
+ENTRYPOINT ["dotnet", "StudentServiceRequest.Web.dll"]
