@@ -56,17 +56,14 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<AppDbContext>();
-        context.Database.Migrate();
-        await SeedData.InitializeAsync(services);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred while seeding the database.");
-    }
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    var context = services.GetRequiredService<AppDbContext>();
+    
+    logger.LogInformation("Running database migrations...");
+    context.Database.Migrate();
+    logger.LogInformation("Database migrations completed.");
+    
+    await SeedData.InitializeAsync(services);
 }
 
 // Configure the HTTP request pipeline.
