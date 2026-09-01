@@ -5,10 +5,16 @@ COPY src/StudentServiceRequest.Web/*.csproj ./src/StudentServiceRequest.Web/
 RUN dotnet restore StudentServiceRequest.sln
 COPY . .
 WORKDIR /src/src/StudentServiceRequest.Web
-RUN dotnet publish -c Release -o /app/publish --no-restore
 
-# Run migrations in build stage (has SDK)
-RUN dotnet ef database update --project /src/src/StudentServiceRequest.Web/StudentServiceRequest.Web.csproj --no-build 2>&1 || true
+# Install EF Core tools
+RUN dotnet tool install --global dotnet-ef
+ENV PATH="$PATH:/root/.dotnet/tools"
+
+# Run migrations against Neon
+RUN dotnet ef database update --project /src/src/StudentServiceRequest.Web/StudentServiceRequest.Web.csproj 2>&1
+
+# Publish
+RUN dotnet publish -c Release -o /app/publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
 WORKDIR /app
