@@ -14,6 +14,20 @@ public static class SeedData
 
         string[] roles = { "Student", "Staff" };
 
+        // Guard: if Identity tables don't exist yet, fail fast with actionable message instead of 42P01 crash
+        try
+        {
+            // Lightweight probe - will throw 42P01 if AspNetRoles missing
+            _ = await roleManager.RoleExistsAsync(roles[0]);
+        }
+        catch (Npgsql.PostgresException pgEx) when (pgEx.SqlState == "42P01")
+        {
+            logger.LogError(pgEx, "Seed aborted: relation \"AspNetRoles\" does not exist. Migrations did not create schema. "
+                + "Check __EFMigrationsHistory is in sync and use Neon NON-pooled connection (without -pooler) for migrations. "
+                + "Current fix: psql -> DELETE FROM \"__EFMigrationsHistory\" WHERE \"MigrationId\"='20260905063155_InitialCreate'; then restart app to re-migrate.");
+            throw; // rethrow to be caught in Program.cs - avoids silent startup with missing tables
+        }
+
         foreach (var role in roles)
         {
             if (!await roleManager.RoleExistsAsync(role))
