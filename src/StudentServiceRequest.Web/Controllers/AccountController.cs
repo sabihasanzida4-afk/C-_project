@@ -46,7 +46,8 @@ public class AccountController : Controller
             {
                 UserName = model.Email,
                 Email = model.Email,
-                FullName = model.FullName
+                FullName = model.FullName,
+                EmailConfirmed = true // Auto-confirm since EmailSender is dummy (logs only) - allows immediate login; remove if real email provider is configured
             };
             try
             {
@@ -98,10 +99,28 @@ public class AccountController : Controller
         ViewData["ReturnUrl"] = returnUrl;
         if (ModelState.IsValid)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
+            // Normalize email lookup - PasswordSignInAsync expects UserName, but we store Email as UserName.
+            // Lookup by email first to give better error messages (IsNotAllowed, not found) instead of generic "Invalid".
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                _logger.LogWarning("Login failed: user not found for email {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
+            }
+
+            // Only block on unconfirmed email if Identity requires it (now false). Keep for diagnostics when true.
+            if (_userManager.Options.SignIn.RequireConfirmedEmail && !await _userManager.IsEmailConfirmedAsync(user))
+            {
+                _logger.LogWarning("Login failed: email not confirmed for {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, "Email not confirmed. Please check your email for confirmation link (see server logs if using dummy EmailSender).");
+                return View(model);
+            }
+
+            var result = await _signInManager.PasswordSignInAsync(user.UserName!, model.Password, model.RememberMe, lockoutOnFailure: true);
             if (result.Succeeded)
             {
-                _logger.LogInformation("User logged in.");
+                _logger.LogInformation("User {Email} logged in.", model.Email);
                 return LocalRedirect(returnUrl ?? Url.Content("~/"));
             }
             if (result.RequiresTwoFactor)
@@ -110,11 +129,19 @@ public class AccountController : Controller
             }
             if (result.IsLockedOut)
             {
-                _logger.LogWarning("User account locked out.");
-                return RedirectToAction("./Lockout");
+                _logger.LogWarning("User account locked out for {Email}", model.Email);
+                ModelState.AddModelError(string.Empty, "Account locked out. Try again later.");
+                return View(model);
+            }
+            if (result.IsNotAllowed)
+            {
+                _logger.LogWarning("Login IsNotAllowed for {Email} - likely email not confirmed or not allowed", model.Email);
+                ModelState.AddModelError(string.Empty, "Login not allowed. Ensure email is confirmed.");
+                return View(model);
             }
             else
             {
+                _logger.LogWarning("Invalid password for {Email}", model.Email);
                 ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                 return View(model);
             }

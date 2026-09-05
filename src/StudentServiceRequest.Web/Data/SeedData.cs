@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using StudentServiceRequest.Web.Models.Identity;
 
@@ -63,6 +64,43 @@ public static class SeedData
             {
                 logger.LogError("Failed to create staff user: {Errors}", string.Join(", ", result.Errors.Select(e => e.Description)));
             }
+        }
+        else
+        {
+            // Fix existing staff user that may be unconfirmed or missing role (from earlier deploys with RequireConfirmedEmail=true)
+            bool needsUpdate = false;
+            if (!staffUser.EmailConfirmed)
+            {
+                staffUser.EmailConfirmed = true;
+                needsUpdate = true;
+                logger.LogInformation("Fixing staff user: setting EmailConfirmed=true for {Email}", staffEmail);
+            }
+            if (needsUpdate)
+            {
+                var updResult = await userManager.UpdateAsync(staffUser);
+                if (!updResult.Succeeded)
+                    logger.LogError("Failed to update staff user {Email}: {Errors}", staffEmail, string.Join(", ", updResult.Errors.Select(e => e.Description)));
+            }
+            if (!await userManager.IsInRoleAsync(staffUser, "Staff"))
+            {
+                await userManager.AddToRoleAsync(staffUser, "Staff");
+                logger.LogInformation("Added Staff role to existing user {Email}", staffEmail);
+            }
+            // Ensure password still works - if not, log hint (do not auto-reset for security)
+            if (!await userManager.CheckPasswordAsync(staffUser, "Staff@123"))
+            {
+                logger.LogWarning("Existing staff user {Email} password does not match Staff@123 - if you changed it, use that password; otherwise reset via Forgot Password", staffEmail);
+            }
+        }
+
+        // Auto-fix: confirm all existing users that are still unconfirmed (common cause of "Invalid login attempt" with dummy EmailSender)
+        // This makes previous registrations usable without requiring email link from logs.
+        var unconfirmedUsers = await userManager.Users.Where(u => !u.EmailConfirmed).ToListAsync();
+        foreach (var u in unconfirmedUsers)
+        {
+            u.EmailConfirmed = true;
+            await userManager.UpdateAsync(u);
+            logger.LogInformation("Auto-confirmed email for existing user {Email}", u.Email);
         }
     }
 }

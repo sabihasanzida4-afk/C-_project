@@ -81,7 +81,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    options.SignIn.RequireConfirmedEmail = true;
+    // Set to false so dummy EmailSender (logs only) doesn't block login.
+    // Original was true which caused "Invalid login attempt" for unconfirmed emails since no real email is sent.
+    // For production with real email provider, set back to true.
+    options.SignIn.RequireConfirmedEmail = false;
     options.Password.RequireDigit = true;
     options.Password.RequiredLength = 8;
     options.Password.RequireNonAlphanumeric = false;
